@@ -319,7 +319,7 @@ objects:
             sleep 5
 
             if [ "${WITH_SONAR}" == "true" ] ; then
-              oc new-app -f http://bit.ly/openshift-sonarqube-embedded-template --param=SONARQUBE_VERSION=6.7 --param=SONAR_MAX_MEMORY=4Gi
+              oc new-app -f https://raw.githubusercontent.com/OpenShiftDemos/sonarqube-openshift-docker/master/sonarqube-postgresql-template.yaml --param=SONARQUBE_VERSION=6.7
             fi
 
             if [ "${WITH_CHE}" == "true" ] ; then
@@ -343,6 +343,8 @@ objects:
             GOGS_PWD=gogs
 
             oc rollout status dc gogs
+
+            sleep 5
 
             _RETURN=$(curl -o /tmp/curl.log -sL --post302 -w "%{http_code}" http://$GOGS_SVC:3000/user/sign_up \
               --form user_name=$GOGS_USER \
