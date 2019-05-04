@@ -2,15 +2,31 @@
 
 Download and install [Container Development Kit (CDK)](https://developers.redhat.com/products/cdk/download/)
 
-Start up an OpenShift cluster:
+Clone this repo and Start up an OpenShift cluster:
+
+## profile
 
 ```
-minishift addons enable xpaas
-minishift start --memory=10240 --vm-driver=virtualbox
-oc login -u developer
+minishift profile set ocp310-cicd
+minishift config set vm-driver virtualbox
+minishift config set cpus 2
+minishift config set memory 11GB
+minishift config set disk-size 30GB
+minishift config set ocp-tag v3.10.127
+minishift addon enable anyuid
+minishift config set image-caching true
+
+```
+## start
+
+```
+minishift start --skip-registration --skip-registry-check
+
+
 ```
 
-Pre-pull the images to make sure the deployments go faster:
+## Pre-pull the images and fix access to volume
+
 
 ```
 minishift ssh
@@ -31,6 +47,8 @@ docker pull registry.access.redhat.com/jboss-eap-7/eap70-openshift:1.5
 exit
 
 ```
+
+## fix jboss-eap70-openshift image stream issue
 
 ```
 oc login -u system:admin
