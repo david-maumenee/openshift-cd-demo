@@ -36,23 +36,12 @@ The application used in this pipeline is a JAX-RS application which is available
 * 10+ GB memory
 * JBoss EAP 7 imagestreams imported to OpenShift (see Troubleshooting section for details)
 
-## Deploy on RHPDS
-
-If you have access to RHPDS, provisioning of this demo is automated via the service catalog under **OpenShift Demos &rarr; OpenShift CI/CD for Monolith**. If you don't know what RHPDS is, read the instructions in the next section.
-
-## Automated Deploy on OpenShift
-You can se the `scripts/provision.sh` script provided to deploy the entire demo:
-
-  ```
-  ./provision.sh --help
-  ./provision.sh deploy --deploy-che --ephemeral
-  ./provision.sh delete 
-  ```
-  
 ## Manual Deploy on OpenShift
 Follow these [instructions](docs/local-cluster.md) in order to create a local OpenShift cluster. Otherwise using your current OpenShift cluster, create the following projects for CI/CD components, Dev and Stage environments:
 
   ```shell
+  oc login -u developer
+
   # Create Projects
   oc new-project dev --display-name="Tasks - Dev"
   oc new-project stage --display-name="Tasks - Stage"
@@ -85,7 +74,8 @@ your own names and use the following to create the demo:
 
 * If pipeline execution fails with ```error: no match for "jboss-eap70-openshift"```, import the jboss imagestreams in OpenShift.
   ```
-  oc create -f https://raw.githubusercontent.com/openshift/library/master/official/eap/imagestreams/jboss-eap70-openshift-rhel7.json -n openshift
+  oc login -u system:admin
+  oc create -f jboss-eap70-openshift-rhel7.json -n openshift
   ```
 * If Maven fails with `/opt/rh/rh-maven33/root/usr/bin/mvn: line 9:   298 Killed` (e.g. during static analysis), you are running out of memory and need more memory for OpenShift.
 
